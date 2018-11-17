@@ -12,32 +12,35 @@ package dp;
  * We can use min1 and min2 to track the indices of the 1st and 2nd smallest cost till previous house, 
  * if the current color¡¯s index is same as min1, then we have to go with min2, otherwise we can safely 
  * go with min1.
+ * 
+ * O(nk)
  */
 public class PaintHouseII {
-	public int minCostII(int[][] costs) {
-        if(costs == null || costs.length == 0 || costs[0].length == 0) return 0;
-
-        int n = costs.length, k = costs[0].length;
-        if(k == 1) return (n==1? costs[0][0] : -1);
-
-        int prevMin = 0, prevMinInd = -1, prevSecMin = 0;//prevSecMin always >= prevMin
-        for(int i = 0; i<n; i++) {
-            int min = Integer.MAX_VALUE, minInd = -1, secMin = Integer.MAX_VALUE;
-            for(int j = 0; j<k;  j++) {
-                int val = costs[i][j] + (j == prevMinInd? prevSecMin : prevMin);
-                if(minInd< 0) {min = val; minInd = j;}//when min isn't initialized
-                else if(val < min) {//when val < min, 
-                    secMin = min;
-                    min = val;
-                    minInd = j;
-                } else if(val < secMin) { //when min<=val< secMin
-                    secMin = val;
-                }
+    public int minCostII(int[][] costs) {
+        if(costs.length==0) return 0;
+        
+        int min1 = 0, min2 = 0, index1 = -1;
+        
+        for(int i=0;i<costs.length;i++){
+            int m1 = Integer.MAX_VALUE, m2 = Integer.MIN_VALUE, idx1 = -1;
+            
+            for(int j = 0;j<costs[0].length;j++){
+        	int cost = costs[i][j] + (j!=index1 ? min1 : min2);
+        	
+        	if(cost<m1){
+        	    m2 = m1;
+        	    m1 = cost;
+        	    idx1 = j;
+        	}
+        	
+        	else if(cost < m2)
+        	    m2 = cost;
             }
-            prevMin = min;
-            prevMinInd = minInd;
-            prevSecMin = secMin;
+            
+            min1 = m1;
+            min2 = m2;
+            index1 = idx1;
         }
-        return prevMin;
+        return min1;
     }
 }

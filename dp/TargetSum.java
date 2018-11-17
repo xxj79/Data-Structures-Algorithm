@@ -1,5 +1,7 @@
 package dp;
 
+//Classic knapsack
+
 //You are given a list of non-negative integers, a1, a2, ..., an, 
 //and a target, S. Now you have 2 symbols + and -. For each integer, 
 //you should choose one from + and - as its new symbol.
@@ -54,5 +56,52 @@ public class TargetSum {
         }
         
         return f[n][sum + S];
+    }
+    
+    //Optimized to 1D
+    public int findTargetSumWays2(int[] nums, int S) {
+        
+        int sum = 0, n = nums.length;
+        
+        for(int num : nums) sum += num;
+        
+        if(sum<S || -sum>S) return 0;
+        
+        int[] dp = new int[2*sum+1];
+        dp[sum] = 1;
+        for(int i = 1;i<=n;i++){
+            int[] temp = new int[2*sum+1];
+            for(int j = 0;j<=2*sum;j++){
+                if(j-nums[i-1]>=0)
+                    temp[j] += dp[j-nums[i-1]];
+                if(j+nums[i-1]<=2*sum)
+                    temp[j] += dp[j+nums[i-1]];
+            }
+            dp = temp;
+        }
+        
+        return dp[sum + S];
+    }
+    
+    //Top down memo
+    int sum = 0;
+    public int findTargetSumWays3(int[] nums, int S) {
+        int n = nums.length;
+        for(int num : nums) sum+=num;
+        if(sum<S || S<(-1)*sum) return 0;
+        
+        Integer[][] memo = new Integer[n][2*sum+1];
+        return dfs(memo, nums, S, 0);
+    }
+    
+    int dfs(Integer[][] memo, int[] nums, int S, int n){
+        if(n == nums.length) return S == 0 ? 1 : 0;
+        if(S+sum>2*sum) return 0;
+        if(memo[n][S+sum] != null) return memo[n][S+sum];
+        
+        int ret = dfs(memo, nums, S-nums[n], n+1) + dfs(memo, nums, S+nums[n], n+1);
+        
+        memo[n][S+sum] = ret;
+        return memo[n][S+sum];
     }
 }

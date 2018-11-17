@@ -3,7 +3,7 @@ package dp;
 //Interview questions from xxx company
 public class FindRouteWithHeightLargerThanH {
 	public static void main(String[] args){
-		System.out.println(find(3, 4, 1));
+		System.out.println(findOptimize(3, 4));
 	}
 	
 	static int find(int m , int n){
@@ -16,6 +16,20 @@ public class FindRouteWithHeightLargerThanH {
 		}
 		return dp[m-1][n-1];
 	}
+	
+	static int findOptimize(int m, int n){
+	    int[] dp = new int[m];
+	    dp[m-1] = 1;
+	    for(int j=1;j<n;j++){
+		int[] temp = new int[m];
+		for(int i=0;i<m;i++){
+		    temp[i] = dp[i] + (i==0?0:dp[i-1]) + (i==m-1?0:dp[i+1]);
+		}
+		dp = temp;
+	    }
+	    return dp[m-1];
+	}
+	
 	
 	static int find(int m , int n, int h){
 		/*int[][][] dp = new int[m][n][2];

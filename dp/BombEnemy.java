@@ -1,5 +1,11 @@
 package dp;
 
+/*
+ * Dynamic(Cache) solution, we cache the number of enemies that a node can bomb
+ * both row wise and column wise. When encounter a wall, we update the caches.
+ * 
+ * And we just iterate all nodes. 
+ */
 public class BombEnemy {
 	public int maxKilledEnemies(char[][] grid) {
         int m = grid.length;
